@@ -1,5 +1,8 @@
 {
   "dependencies": {
     "@supabase/supabase-js": "^2.74.0"
+  },
+  "devDependencies": {
+    "dotenv-cli": "^10.0.0"
   }
 }
