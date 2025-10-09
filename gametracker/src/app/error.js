@@ -1,5 +1,9 @@
-export default function DefaultErrorPage() {
+'use client';
+
+export default function DefaultErrorPage({error}) {
     return(
-        <h1>ERROR </h1>
+        <main className="flex">
+
+        </main>
     )
 }

@@ -2,25 +2,8 @@
 
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react'; // Ícone para o botão
-import { useEffect } from 'react';
-import { supabase } from '@/lib/supabaseClient';
 
 export default function HomePage() {
-  useEffect(() => {
-     async function getGames() {
-      const { data, error } = await supabase
-        .from('games') // Nome da sua tabela
-        .select('*'); // Seleciona todas as colunas
-      
-      if (error) {
-        console.error('Erro ao buscar jogos:', error);
-      } else {
-        console.log('Jogos encontrados:', data);
-      }
-    }
-
-    getGames();
-  }, []);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-gray-900 text-white">
