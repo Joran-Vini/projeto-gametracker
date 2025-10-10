@@ -1,5 +1,3 @@
-// src/app/api/search/route.js
-
 import { NextResponse } from 'next/server';
 
 export async function GET(request) {

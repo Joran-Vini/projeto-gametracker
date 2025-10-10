@@ -1,8 +1,8 @@
 'use client';
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 export default function RegisterForm() {
     const [username, setUsername] = useState('');
@@ -24,26 +24,26 @@ export default function RegisterForm() {
             return;
         }
         try {
-            console.log('Dados do formulário:', { username, password });
-            alert('Registro placeholder bem-sucedido! Redirecionando para o login...');
-
-            router.push('/login');
+          const response = await fetch('/api/auth/register', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({username, password})
+          });
+          if (!response.ok) {
+            const data = await response.json();
+            throw new Error(data.error || 'Algo deu errado');
+          }
+          toast.success('Usuario criado com sucesso');
+          router.push('/login');
         } catch(error) {
             // Tratamento de erros que podem vir da nossa API
-            setError(err.message || 'Ocorreu um erro durante o registro.');
+            setError(error.message || 'Ocorreu um erro durante o registro.');
         }
 }
 
     return (
-        <div className="w-full max-w-md p-8 space-y-6 bg-gray-800 rounded-xl shadow-lg">
-        <h1 className="text-3xl font-bold text-center text-white">Criar Conta</h1>
-        <p className="text-center text-gray-400">
-          Já tem uma conta?{' '}
-          <Link href="/login" className="font-medium text-sky-400 hover:text-sky-500">
-            Faça login
-          </Link>
-        </p>
-
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label 
@@ -121,6 +121,5 @@ export default function RegisterForm() {
             </button>
           </div>
         </form>
-      </div>
     )
 }
