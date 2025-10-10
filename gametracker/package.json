@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint",
-    "db:push": "dotenv -e .env.local prisma db push"
-  },
+  "dev": "next dev",
+  "build": "next build",
+  "start": "next start",
+  "lint": "next lint",
+  "db:push": "dotenv -e .env.local prisma db push"
+},
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.0",
     "@prisma/client": "^6.17.0",
@@ -23,6 +23,7 @@
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@types/react": "19.2.2",
+    "dotenv-cli": "^10.0.0",
     "eslint": "^9",
     "eslint-config-next": "15.5.4",
     "prisma": "^6.17.0",
