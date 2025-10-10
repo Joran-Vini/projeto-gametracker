@@ -1,5 +1,3 @@
-// src/lib/auth.ts
-
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import prisma from './prisma';
 import CredentialsProvider from 'next-auth/providers/credentials';
@@ -53,6 +51,22 @@ export const authOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   debug: process.env.NODE_ENV === 'development',
   pages: {
-    signIn: '/login', // Adicione esta linha para especificar sua página de login
-  }
+    signIn: '/login', 
+  },
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.username = user.username;
+        token.id = user.id;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.username = token.username;
+        session.user.id = token.id;
+      }
+      return session;
+    },
+  },
 };

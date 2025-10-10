@@ -1,14 +1,37 @@
 'use client'
 
 import { useState } from "react"
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 export default function LoginForm() {
+    const router = useRouter();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
 
-    function handleSubmit(event) {
-       // 
+    async function handleSubmit(event) {
+        event.preventDefault();
+        setError('');
+
+        if (!username || !password) {
+            setError('Voce precisa colocar valores')
+        }
+        try {
+            const result = await signIn('credentials', {
+                username: username,
+                password: password,
+                redirect: false
+            });
+            if (result.error) {
+                setError("Usuario ou senha invalidos")
+                return;
+            }
+            router.push('/dashboard');
+            router.refresh();
+        } catch (error) {
+            setError("Ocorreu um erro insesperado. Tente novamente")
+        }
     }
 
     return (
