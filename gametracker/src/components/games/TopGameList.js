@@ -3,33 +3,17 @@
 import {useEffect, useState } from "react";
 import Carousel from './Carousel';
 import GameCard from './GameCard';
+import useFetchGames from "@/hooks/useFetchGames";
 
 export default function TopGameList() {
-  const [games, setGames] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const {games, isLoading, error} = useFetchGames('/api/games/top-12-popular');
 
-  useEffect(() => {
-    async function fetchGames() {
-      setIsLoading(true)
-      try {
-      const response = await fetch('/api/games/top-12-popular');
-      if (!response.ok) {
-        throw new Error('Erro ao dar fetch no top 10 jogos');
-      }
-      const data = await response.json();
-      setGames(data);
-      } catch(error) {
-        console.error(error);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    fetchGames();
-  }, []);
-
+  
   if (isLoading) {
     return <p className="text-center text-gray-400">Carregando jogos...</p>
+  }
+   if (error) {
+    return <p className="text-center text-red-400 h-96 flex items-center justify-center">Falha ao carregar jogos.</p>;
   }
 
     return (
