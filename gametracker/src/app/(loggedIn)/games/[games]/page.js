@@ -5,12 +5,13 @@ import { useParams } from "next/navigation";
 import MetacriticBadge from '@/components/games/MetaCriticBadge'
 import { SiMetacritic } from "react-icons/si";
 import { Monitor, Gamepad } from 'lucide-react';
+import GameList from "@/components/games/GameList";
 
 export default function GamePage() {
     const params = useParams();
 
 
-    const {games: game, isLoading, error}= useFetchGames(`/api/games/${params.games}`);
+    const {games: game, isLoading, error}= useFetchGames(`/api/games/gameDetails/${params.games}`);
 
     //Checar se pagina esta carregando
      if (isLoading) {
@@ -52,6 +53,11 @@ export default function GamePage() {
                             </span>
                         )}
                     </div>    
+                     <div className="md:col-span-2">
+                    <h2 className="text-3xl font-bold mb-4">Sobre o Jogo</h2>
+                    <p className="text-sm text-gray-500 mb-2 italic">(Descrição original em inglês, fornecida pela API)</p>
+                    <p className="leading-relaxed text-gray-300 text-lg">{game.description_raw}</p>
+                    </div>
                     {/* Lado Direito */}
                     <div className="flex flex-col items-end gap-4">
                         <div className="flex items-center gap-3">
@@ -88,12 +94,17 @@ export default function GamePage() {
         </section>
 
         <section className="container mx-auto p-8">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div className="md:col-span-2">
-                    <h2 className="text-3xl font-bold mb-4">Sobre o Jogo</h2>
-                    <p className="text-sm text-gray-500 mb-2 italic">(Descrição original em inglês, fornecida pela API)</p>
-                    <p className="leading-relaxed text-gray-300 text-lg">{game.description_raw}</p>
-                </div>
+            <div className="mt-12">
+                <h2 className="text-3xl font-bold mb-4">Jogos da Franquia</h2>
+                {game && (
+                        <GameList url={`/api/games/${game.id}/series`}/>
+                    )}
+            </div> 
+             <div className="mt-12">
+                <h2 className="text-3xl font-bold mb-4">Jogos da Franquia</h2>
+                {game && (
+                        <GameList url={`/api/games/${game.id}/similar`}/>
+                    )}
             </div> 
         </section>
     </div>

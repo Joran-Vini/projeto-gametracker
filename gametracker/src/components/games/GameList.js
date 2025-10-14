@@ -6,7 +6,7 @@ import useFetchGames from "@/hooks/useFetchGames";
 import CardSkeleton from './CardSkeleton';
 import Link from 'next/link';
 
-export default function TopGameList({ url }) {
+export default function GameList({ url }) {
   const {games, isLoading, error} = useFetchGames(url);
 
   if (isLoading) {

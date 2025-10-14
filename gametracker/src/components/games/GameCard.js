@@ -17,7 +17,7 @@ export default function GameCard({ game }) {
             <GamecardConsoleSymbol game={game}/>
             </div>
             <div className={`absolute top-0 right-0 m-2 rounded-full px-2 py-1 text-sm font-bold ${getRatingColor(game.rating)}`}>
-                {game.rating}
+                {game.rating * 2}
             </div>
         </div>
   );
