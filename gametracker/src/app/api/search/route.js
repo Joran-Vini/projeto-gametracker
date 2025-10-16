@@ -11,7 +11,7 @@ export async function GET(request) {
   }
 
   const apiKey = process.env.RAWG_API_KEY;
-  const url = `https://api.rawg.io/api/games?key=${apiKey}&search=${encodeURIComponent(query)}&ordering=-added`;
+  const url = `https://api.rawg.io/api/games?key=${apiKey}&search=${encodeURIComponent(query)}`;
 
   try {
     const response = await fetch(url);
@@ -20,8 +20,10 @@ export async function GET(request) {
     }
     const data = await response.json();
 
+    const filteredGames = data.results.filter(game => game.rating > 0);
+
     // Retorna os resultados para o seu front-end
-    return NextResponse.json(data.results);
+    return NextResponse.json(filteredGames);
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

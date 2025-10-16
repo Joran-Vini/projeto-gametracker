@@ -1,9 +1,10 @@
-'use client'
+'use client';
 
 import Link from "next/link";
-import { Gamepad2, LogOut } from 'lucide-react';
-import { useSession, signOut } from "next-auth/react";
-import SearchBar from './search-bar';
+import { Gamepad2 } from 'lucide-react';
+import { useSession } from "next-auth/react";
+import MainHeaderUnauthenticated from './main-header-unauthenticated'
+import MainHeaderAuthenticated from './main-header-authenticated'
 
 export default function MainHeader() {
     const { data: session ,status } = useSession();
@@ -19,34 +20,10 @@ export default function MainHeader() {
                 {status === 'loading' &&  
                 <li className="text-gray-500">Carregando...</li>}
                 {status === 'unauthenticated' && (
-                    <>
-                    <li>
-                    <Link href="/register" className="hover:text-sky-400 transition-colors">
-                        Registrar
-                    </Link>
-                </li>
-                <li>
-                    <Link href="/login" className="hover:text-sky-400 transition-colors">
-                        Logar
-                    </Link>
-                </li>
-                </>)}
+                    <MainHeaderUnauthenticated />
+                )}
                 {status === 'authenticated' && (
-                    <>
-                    <SearchBar />
-                    <li className="text-gray-400">
-                    Olá, {session.user.username}!
-              </li>
-              <li>
-                <button 
-                  onClick={() => signOut({ callbackUrl: '/' })} 
-                  className="flex items-center gap-2 font-semibold text-red-400 hover:text-red-500 transition-colors"
-                >
-                  <LogOut size={20} />
-                  Sair
-                </button>
-              </li>
-            </>
+                    <MainHeaderAuthenticated session={session}/>
                 )}
             </ul>
             </nav>
