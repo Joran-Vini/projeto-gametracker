@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Gamepad2, LogOut } from 'lucide-react';
 import { useSession, signOut } from "next-auth/react";
+import SearchBar from './search-bar';
 
 export default function MainHeader() {
     const { data: session ,status } = useSession();
@@ -32,8 +33,9 @@ export default function MainHeader() {
                 </>)}
                 {status === 'authenticated' && (
                     <>
-              <li className="text-gray-400">
-                Olá, {session.user.username}!
+                    <SearchBar />
+                    <li className="text-gray-400">
+                    Olá, {session.user.username}!
               </li>
               <li>
                 <button 

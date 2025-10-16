@@ -11,7 +11,7 @@ export async function GET(request) {
   }
 
   const apiKey = process.env.RAWG_API_KEY;
-  const url = `https://api.rawg.io/api/games?key=${apiKey}&search=${encodeURIComponent()}`;
+  const url = `https://api.rawg.io/api/games?key=${apiKey}&search=${encodeURIComponent(query)}&ordering=-added`;
 
   try {
     const response = await fetch(url);

@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 
 export async function GET(request, {params}) {
-    const gameId = params.gameId;
+
     const apiKey = process.env.RAWG_API_KEY;
+    const gameId = params.gameId;
     const url = `https://api.rawg.io/api/games/${gameId}/game-series?key=${apiKey}`;
 
 
