@@ -11,6 +11,8 @@ export default withAuth({
 export const config = {
     // O "matcher" define quais rotas o middleware deve proteger.
     matcher: [
-        "/dashboard/:path*"
+        "/dashboard/:path*",
+        "/profile/:path*",
+        "/games/:path*"
     ]
 };

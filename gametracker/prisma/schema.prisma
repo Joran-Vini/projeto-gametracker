@@ -9,12 +9,36 @@ model User {
   id            String          @id @default(cuid())
   name          String?
   username      String          @unique 
+  createdAt     DateTime  @default(now())
   email         String?         
   emailVerified DateTime?
   image         String?
   password      String?
   accounts      Account[]
   sessions      Session[]
+  games         Game[]
+}
+enum GameStatus {
+  PLAYING
+  COMPLETED
+  BACKLOG
+  WISHLIST
+}
+model Game {
+  id        Int        @id @default(autoincrement())
+  rawgId    Int        @unique 
+  title     String
+  imageUrl  String?
+  rating    Float?     
+  metacritic Int?     
+  status    GameStatus @default(BACKLOG) 
+
+  // A Relação com o Usuário
+  userId    String
+  user      User       @relation(fields: [userId], references: [id])
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt 
 }
 
 model Account {

@@ -9,6 +9,7 @@ export default function MainHeaderAuthenticated({ session }) {
     return (
         <>
                     <Link href="/dashboard" className="hover:text-sky-400 transition-colors">Inicio</Link>
+                    <Link href="/profile" className="hover:text-sky-400 transition-colors">Meu Perfil</Link>
                     <SearchBar />
                     <li className="text-gray-400">
                     Olá, {session.user.username}!
