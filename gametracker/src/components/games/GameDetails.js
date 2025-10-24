@@ -6,11 +6,14 @@ import { SiMetacritic } from "react-icons/si";
 import { Monitor, Gamepad } from 'lucide-react';
 import GameList from "@/components/games/GameList";
 import { useParams } from "next/navigation";
-
+import ScreenshotCarousel from "@/components/games/ScreenshotsCarousel";
 
 export default function GameDetailPage() {
     const params = useParams();
-    const {games: game, isLoading, error}= useFetchGames(`/api/games/gameDetails/${params.games}`);
+   
+    const identifier = params.games;
+
+    const {games: game, isLoading, error}= useFetchGames(identifier ? `/api/games/gameDetails/${identifier}` : null);
    
     //Checar se pagina esta carregando
      if (isLoading) {
@@ -99,7 +102,10 @@ export default function GameDetailPage() {
                         <GameList url={`/api/games/${game.id}/series`}/>
                     )}
             </div> 
-             
+            <div className="mt-12">
+                <h2 className="text-3xl font-bold mb-4">Capturas do Jogo</h2>
+                <ScreenshotCarousel gameId={game.id} />
+            </div>
         </section>
     </div>
     )

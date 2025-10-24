@@ -1,6 +1,6 @@
 'use client';
 
-import ProfileGameList from "@/components/games/ProfileGameList";
+import ProfileGameList from "@/components/profile/ProfileGameList";
 import { useSearchParams } from "next/navigation";
 
 const statusTitles = {
