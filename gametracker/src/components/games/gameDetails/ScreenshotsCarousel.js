@@ -1,7 +1,7 @@
 'use client';
 
 import useFetchGames from "@/hooks/useFetchGames";
-import Carousel from './Carousel';
+import Carousel from '../Carousel';
 import ScreenshotExpanded from "./ScreenshotExpanded";
 import Image from "next/image";
 import { useState } from "react";
@@ -38,9 +38,7 @@ export default function ScreenshotsCarousel({ gameId }) {
                 {screenshots.map(screenshot => (
                     <div key={screenshot.id} className="flex-shrink-0 relative h-48 w-80 rounded-lg overflow-hidden" onClick={() => setExpandedImage(screenshot.image)}>
                         <Image src={screenshot.image} alt="prints do jogo" className="object-cover" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" fill/>
-                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100 text-white text-4xl">
-                        🔍
-                    </div>
+                   
                 </div>
                 ))}
             </Carousel>

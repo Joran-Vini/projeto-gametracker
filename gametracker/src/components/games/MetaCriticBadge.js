@@ -6,7 +6,11 @@ const getRatingColor = (metacritic) => {
 };
 
 export default function MetacriticBadge({ score }) {
-    if (!score) return null; // Não renderiza nada se não houver nota
+    if (!score){ 
+        return <div className={`flex items-center justify-center w-20 h-20 rounded-lg font-bold text-4xl bg-gray-500 text-white`}>
+            NAN
+        </div>;
+    } // Não renderiza nada se não houver nota
 
     return (
         <div className={`flex items-center justify-center w-20 h-20 rounded-lg font-bold text-4xl ${getRatingColor(score)}`}>
