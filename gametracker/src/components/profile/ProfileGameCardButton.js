@@ -14,7 +14,7 @@ export default function ProfileGameCardButton({ isMenuOpen, setIsMenuOpen, game 
                 headers: {
                     'Content-Type': 'application/json',
                 }, 
-                body: JSON.stringify({ gameId: game.id , gameStatus: newStatus})
+                body: JSON.stringify({ rawgId: game.id , gameStatus: newStatus})
             });
             if (!response.ok) {
                 throw new Error('Erro ao atualizar status do jogo.');

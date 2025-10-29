@@ -7,6 +7,8 @@ import { useParams } from "next/navigation";
 import ScreenshotCarousel from "@/components/games/gameDetails/ScreenshotsCarousel";
 import { Plus } from "lucide-react";
 import useAddGame from "../../../hooks/useAddGame";
+import UserInputRating from "./UserInputRating";
+import toast from "react-hot-toast";
 
 export default function GameDetailPage() {
     const { addGameToCollection } = useAddGame();
@@ -34,6 +36,30 @@ export default function GameDetailPage() {
     function handleOnClick() {
         addGameToCollection(game);
     }
+    async function handleRatingChange(newRating) {
+        const loadingToastId = toast.loading('Atualizando sua avaliação...');
+        try {
+            const response = await fetch('/api/my-games', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                }, 
+                body: JSON.stringify({
+                    rawgId: game.id,
+                    userRating: newRating,
+                })
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.error || 'Erro desconhecido ao atualizar a avaliação.');
+            }
+            toast.success('Avaliação atualizada com sucesso!', { id: loadingToastId });
+            window.location.reload();
+        } catch (error) {
+            console.error("Erro ao atualizar a avaliação do jogo:", error);
+            toast.error(`Erro: ${error.message}`, { id: loadingToastId });
+        }
+    } 
 
     return (
     <div className="text-white bg-gray-900">
@@ -55,8 +81,7 @@ export default function GameDetailPage() {
                         {game.name}
                     </h1>
                     <button 
-                        onClick={handleOnClick} // Certifique-se que handleOnClick está definida
-                        className="inline-flex items-center justify-center gap-2 rounded-lg bg-sky-500 px-6 py-3 text-lg font-semibold text-white shadow-lg transition-transform hover:scale-105 hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2 focus:ring-offset-gray-900"
+                        onClick={handleOnClick} className="inline-flex items-center justify-center gap-2 rounded-lg bg-sky-500 px-6 py-3 text-lg font-semibold text-white shadow-lg transition-transform hover:scale-105 hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2 focus:ring-offset-gray-900"
                     >
                         <Plus size={20}/>Adicionar a coleção
                     </button>
@@ -69,7 +94,7 @@ export default function GameDetailPage() {
                     <div className="md:col-span-3">
                         <h3 className="text-2xl font-bold mb-4">Sua Avaliação</h3>
                         <div className="bg-gray-800 p-4 rounded-lg text-center">
-                            (Interface de Nota do Usuário virá aqui)
+                            <UserInputRating rating={game.userRating}  onRatingChange={handleRatingChange}/>
                         </div>
                     </div>
 

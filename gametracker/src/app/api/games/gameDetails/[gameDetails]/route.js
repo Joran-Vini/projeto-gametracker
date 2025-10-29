@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { authOptions } from "@/lib/auth";
+import { getServerSession } from "next-auth";
 
 export async function GET(request, context) {
     
@@ -16,19 +18,36 @@ export async function GET(request, context) {
          return NextResponse.json({ error: 'Chave API não configurada' }, { status: 500 });
     }
 
-    const url = `https://api.rawg.io/api/games/${game}?key=${apiKey}`;
-    console.log("[API DETALHES] URL final para RAWG:", url);
-    try {
-        console.log("[API DETALHES] Fazendo fetch para RAWG...");
-        const response = await fetch(url);
-        console.log("[API DETALHES] Resposta da RAWG recebida, status:", response.status);
+    const session = await getServerSession(authOptions);
+    const userId = session?.user?.id || null;
 
+    const url = `https://api.rawg.io/api/games/${game}?key=${apiKey}`;
+    
+    try {
+        
+        const response = await fetch(url);
+       
         if (!response.ok) {
             throw new Error('Erro ao pegar dados na API');
         }
         const data = await response.json();
         
-        console.log("[API DETALHES] Dados recebidos da RAWG (Nome):", data?.name);
+        let userGameData = null;
+        if (userId && data.id) { // Só buscamos se tivermos userId e o rawgId
+            userGameData = await prisma.game.findFirst({
+                where: {
+                    userId: userId,
+                    rawgId: data.id, // Procuramos pelo ID da RAWG
+                }
+            });
+        }
+        const combinedGameData = {
+            ...gameDataFromRawg, // Começamos com todos os dados da RAWG
+            userRating: userGameData?.userRating ?? null, // Adicionamos a nota do usuário (ou null)
+            statusInCollection: userGameData?.status ?? null, // Adicionamos o status (ou null)
+            // Adicionamos o ID do nosso banco, se existir, pode ser útil
+            dbId: userGameData?.id ?? null, 
+        };
 
         return NextResponse.json(data)
 

@@ -62,28 +62,56 @@ export async function PUT(request) {
     if (!session) { 
         return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
     }
-    const {gameId, gameStatus} = await request.json();
+    
+    try {
+        const {rawgId, gameStatus, userRating} = await request.json();
 
     // Validação: Ver se recebemos os dados necessários
-        if (!gameId || !gameStatus) {
-            return NextResponse.json({ error: 'ID do jogo e novo status são obrigatórios' }, { status: 400 });
+        if (!rawgId ) {
+            return NextResponse.json({ error: 'ID do jogo é obrigatório' }, { status: 400 });
+        }
+        if (userRating === undefined && gameStatus === undefined) {
+            return NextResponse.json({ error: 'Nenhum dado para atualizar fornecido (status ou nota)' }, { status: 400 });
+        } 
+
+        // Encontrar o jogo no NOSSO banco usando rawgId E userId
+        const gameInDb = await prisma.game.findFirst({
+            where: {
+                rawgId: rawgId,
+                userId: session.user.id,
+            }
+        });
+
+        // Se não encontrou, retorna o erro 404
+        if (!gameInDb) {
+             return NextResponse.json({ error: 'Jogo não encontrado na sua coleção.' }, { status: 404 });
         }
 
-        // Validação: Ver se o status enviado é válido
+        const dataToUpdate = {};
+
+        if (gameStatus !== undefined) {
+            // Validação: Ver se o status enviado é válido
         const validStatuses = ['PLAYING', 'COMPLETED', 'BACKLOG', 'WISHLIST'];
         if (!validStatuses.includes(gameStatus)) {
             return NextResponse.json({ error: 'Status inválido' }, { status: 400 });
         }
+        dataToUpdate.status = gameStatus;
+        }
 
-    try {
+        if (userRating !== undefined) {
+            const ratingNum = parseFloat(userRating);
+            if (isNaN(ratingNum) || ratingNum < 0 || ratingNum > 10) {
+                 return NextResponse.json({ error: 'Nota inválida. Deve ser um número entre 0 e 10.' }, { status: 400 });
+            }
+            dataToUpdate.userRating = ratingNum;
+        }
+
             const updatedGame = await prisma.game.update({
                 where: {
-                    id: gameId,
+                    id: gameInDb.id,
                     userId: session.user.id,
                 }, 
-                data: {
-                    status: gameStatus,
-                }
+                data: dataToUpdate
             });
             return NextResponse.json(updatedGame, { status: 200 });
     } catch (error) {
