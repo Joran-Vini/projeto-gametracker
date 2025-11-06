@@ -2,8 +2,7 @@
 
 Uma aplicação web full-stack moderna construída com Next.js (App Router) para descoberta, rastreamento e avaliação de jogos. Este projeto permite que os usuários pesquisem uma vasta biblioteca de jogos da API da RAWG, gerenciem suas coleções pessoais e acompanhem seu progresso.
 
-![Banner do GameTracker](placeholder_para_seu_screenshot.png)
-*(Recomendação: Tire um screenshot bem bonito da sua página de detalhes do jogo ou do dashboard e substitua o nome do arquivo acima)*
+![Banner do GameTracker](PrintMenu.png)
 
 ---
 
@@ -14,7 +13,6 @@ Este projeto foi construído do zero e inclui um conjunto completo de funcionali
 * **Autenticação Completa:** Sistema de registro e login de usuários usando **NextAuth.js**, com proteção de rotas via Middleware do Next.js.
 * **Dashboard de Descoberta:** Uma página principal para usuários logados com "prateleiras" (carrosséis) dinâmicas para "Jogos Populares", "Lançamentos Recentes" e "Gemas Escondidas", com lógica de filtragem de qualidade no back-end.
 * **Página de Detalhes:** Geração de páginas dinâmicas para cada jogo (`/game/[slug]`), exibindo informações detalhadas, galeria de screenshots (com lightbox), nota do Metacritic, gêneros e plataformas.
-* **Sistema de Recomendação:** Lógica de "Jogos da Franquia" e "Jogos Similares" baseada em tags e gêneros, com chamadas de API específicas no back-end.
 * **Coleção Pessoal (Página "Meus Jogos"):**
     * **CRUD Completo:** Usuários podem adicionar, remover e atualizar jogos em sua coleção pessoal.
     * **Gerenciamento de Status:** Capacidade de mover jogos entre listas (Backlog, Jogando, Finalizado, Wishlist).
