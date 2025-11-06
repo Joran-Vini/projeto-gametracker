@@ -10,7 +10,6 @@ function getRatingColor(rating) {
 
 export default function GameCard({ game }) {
 
-  
 
     return (
         <div className="relative h-96 w-64 rounded-xl shadow-lg bg-cover bg-center overflow-hidden group"

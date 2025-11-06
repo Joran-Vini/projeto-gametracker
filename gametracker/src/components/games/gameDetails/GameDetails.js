@@ -5,13 +5,11 @@ import GameDetailsRightSide from "./GameDetailsRightSide";
 import GameList from "@/components/games/GameList";
 import { useParams } from "next/navigation";
 import ScreenshotCarousel from "@/components/games/gameDetails/ScreenshotsCarousel";
-import { Plus } from "lucide-react";
-import useAddGame from "../../../hooks/useAddGame";
 import UserInputRating from "./UserInputRating";
 import toast from "react-hot-toast";
+import StatusSelector from "./StatusSelector";
 
 export default function GameDetailPage() {
-    const { addGameToCollection } = useAddGame();
     const params = useParams();
    
     const identifier = params.games;
@@ -33,9 +31,6 @@ export default function GameDetailPage() {
       return <p className="text-white text-center p-8">Jogo não encontrado.</p>;
     }
 
-    function handleOnClick() {
-        addGameToCollection(game);
-    }
     async function handleRatingChange(newRating) {
         const loadingToastId = toast.loading('Atualizando sua avaliação...');
         try {
@@ -80,11 +75,7 @@ export default function GameDetailPage() {
                     <h1 className="font-extrabold text-4xl md:text-6xl tracking-tight">
                         {game.name}
                     </h1>
-                    <button 
-                        onClick={handleOnClick} className="inline-flex items-center justify-center gap-2 rounded-lg bg-sky-500 px-6 py-3 text-lg font-semibold text-white shadow-lg transition-transform hover:scale-105 hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2 focus:ring-offset-gray-900"
-                    >
-                        <Plus size={20}/>Adicionar a coleção
-                    </button>
+                    <StatusSelector gameData={game} initialStatus={game.statusInCollection} dbId={game.dbId} />
                 </div>
 
                 {/* 2. LAYOUT DE 3 COLUNAS (GRID) */}
@@ -94,7 +85,7 @@ export default function GameDetailPage() {
                     <div className="md:col-span-3">
                         <h3 className="text-2xl font-bold mb-4">Sua Avaliação</h3>
                         <div className="bg-gray-800 p-4 rounded-lg text-center">
-                            <UserInputRating rating={game.userRating}  onRatingChange={handleRatingChange}/>
+                            <UserInputRating rating={game.userRating ?? 0}  onRatingChange={handleRatingChange}/>
                         </div>
                     </div>
 

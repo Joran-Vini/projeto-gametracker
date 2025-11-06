@@ -30,9 +30,22 @@ export async function POST(request) {
     if (!session) {
         return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
     }
-    const gameData = await request.json();
+    
 
     try {
+        const gameData = await request.json();
+
+        const initialStatus = gameData.status || 'BACKLOG';
+
+        if (!gameData.id || !gameData.name) {
+            return NextResponse.json({ error: 'Dados do jogo incompletos' }, { status: 400 });
+        }
+
+        const validStatuses = ['PLAYING', 'COMPLETED', 'BACKLOG', 'WISHLIST'];
+         if (!validStatuses.includes(initialStatus)) {
+            return NextResponse.json({ error: 'Status inicial inválido' }, { status: 400 });
+        }
+
         const newGame = await prisma.game.create({data: {
             rawgId: gameData.id,
             title: gameData.name,
@@ -40,7 +53,7 @@ export async function POST(request) {
             userId: session.user.id,
             rating: gameData.rating,      
             metacritic: gameData.metacritic, 
-            status: 'BACKLOG'
+            status: initialStatus
     }});
         return NextResponse.json(newGame, { status: 201 });
 
@@ -64,38 +77,26 @@ export async function PUT(request) {
     }
     
     try {
-        const {rawgId, gameStatus, userRating} = await request.json();
+        const {gameId, newStatus, userRating} = await request.json();
 
     // Validação: Ver se recebemos os dados necessários
-        if (!rawgId ) {
+        if (!gameId ) {
             return NextResponse.json({ error: 'ID do jogo é obrigatório' }, { status: 400 });
         }
-        if (userRating === undefined && gameStatus === undefined) {
+        if (userRating === undefined && newStatus === undefined) {
             return NextResponse.json({ error: 'Nenhum dado para atualizar fornecido (status ou nota)' }, { status: 400 });
         } 
 
-        // Encontrar o jogo no NOSSO banco usando rawgId E userId
-        const gameInDb = await prisma.game.findFirst({
-            where: {
-                rawgId: rawgId,
-                userId: session.user.id,
-            }
-        });
-
-        // Se não encontrou, retorna o erro 404
-        if (!gameInDb) {
-             return NextResponse.json({ error: 'Jogo não encontrado na sua coleção.' }, { status: 404 });
-        }
-
+        
         const dataToUpdate = {};
 
-        if (gameStatus !== undefined) {
+        if (newStatus !== undefined) {
             // Validação: Ver se o status enviado é válido
         const validStatuses = ['PLAYING', 'COMPLETED', 'BACKLOG', 'WISHLIST'];
-        if (!validStatuses.includes(gameStatus)) {
+        if (!validStatuses.includes(newStatus)) {
             return NextResponse.json({ error: 'Status inválido' }, { status: 400 });
         }
-        dataToUpdate.status = gameStatus;
+        dataToUpdate.status = newStatus;
         }
 
         if (userRating !== undefined) {
@@ -108,7 +109,7 @@ export async function PUT(request) {
 
             const updatedGame = await prisma.game.update({
                 where: {
-                    id: gameInDb.id,
+                    id: gameId,
                     userId: session.user.id,
                 }, 
                 data: dataToUpdate
