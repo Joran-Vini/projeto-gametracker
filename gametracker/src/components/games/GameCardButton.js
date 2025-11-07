@@ -4,6 +4,7 @@
 import { Check, Plus } from 'lucide-react';
 import useAddGame from '../../hooks/useAddGame';
 import { useState } from 'react';
+import CompletedGameModal from './CompletedGameModal';
 
 const statusLabels = {
     PLAYING: "Jogando",
@@ -15,7 +16,7 @@ const statusLabels = {
 export default function GameCardButton({ game }) {
   const { addGameToCollection } = useAddGame();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
     function handleToggleMenu(event) {
       event.preventDefault();
@@ -28,10 +29,27 @@ export default function GameCardButton({ game }) {
         event.stopPropagation();
         setIsMenuOpen(false);
 
-        const gameData = {
+        if (newStatus === 'COMPLETED') {
+            setIsModalOpen(true);
+        } else {
+            const gameData = {
           ...game,
           status: newStatus
         }
+        await addGameToCollection(gameData);
+        }
+
+    }
+
+    async function handleOnSaveModal(userNotes) {
+        setIsModalOpen(false);
+
+        const gameData = {
+            ...game,
+            status: 'COMPLETED',
+            userNotes: userNotes,
+        };
+
         await addGameToCollection(gameData);
     }
 
@@ -50,11 +68,12 @@ export default function GameCardButton({ game }) {
                     key={statusKey}
                     onClick={(event) => handleAddWithStatus(event, statusKey)}
                     className="block w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-gray-700">
-                    Adicionar a "{statusLabel}"
+                    Adicionar a {statusLabel}
                 </button>
             ))}
         </div>
     )}
+        <CompletedGameModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSave={handleOnSaveModal} />
         </div>
     )
 }

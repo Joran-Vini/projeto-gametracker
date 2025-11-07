@@ -11,7 +11,6 @@ export default async function DashboardPage() {
         <div className="p-8 space-y-12">
             <div>
                 <h1 className="text-3xl font bold ">Bem vindo {session.user.username}</h1>
-                <p className="mt-4">Aqui você vera sua lista de jogos</p>
             </div>
             <section>
                 <h2 className="text-2xl font-bold border-b border-gray-700 pb-2 mb-4">Jogos Populares que talvez você não tenha jogado.</h2>

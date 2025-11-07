@@ -31,7 +31,9 @@ model Game {
   imageUrl  String?
   rating    Float?     
   metacritic Int?   
-  userRating Float?  
+  userRating Float?
+  completedOn DateTime?
+  userNotes String? 
   status    GameStatus @default(BACKLOG) 
 
   // A Relação com o Usuário

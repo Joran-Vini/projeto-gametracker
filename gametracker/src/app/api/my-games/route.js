@@ -53,7 +53,9 @@ export async function POST(request) {
             userId: session.user.id,
             rating: gameData.rating,      
             metacritic: gameData.metacritic, 
-            status: initialStatus
+            status: initialStatus,
+            userNotes: gameData.userNotes || null,
+            completedOn: gameData.completedOn || null,
     }});
         return NextResponse.json(newGame, { status: 201 });
 
@@ -77,7 +79,7 @@ export async function PUT(request) {
     }
     
     try {
-        const {gameId, newStatus, userRating} = await request.json();
+        const {gameId, newStatus, userRating, userNotes, completedOn} = await request.json();
 
     // Validação: Ver se recebemos os dados necessários
         if (!gameId ) {
@@ -86,6 +88,12 @@ export async function PUT(request) {
         if (userRating === undefined && newStatus === undefined) {
             return NextResponse.json({ error: 'Nenhum dado para atualizar fornecido (status ou nota)' }, { status: 400 });
         } 
+        if (userNotes !== undefined) {
+            dataToUpdate.userNotes = userNotes; 
+        }
+        if (completedOn !== undefined) {
+            dataToUpdate.completedOn = completedOn; 
+        }
 
         
         const dataToUpdate = {};
