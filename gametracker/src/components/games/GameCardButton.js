@@ -41,13 +41,15 @@ export default function GameCardButton({ game }) {
 
     }
 
-    async function handleOnSaveModal(userNotes) {
+    async function handleOnSaveModal(userNotes, newRating, completionDate) {
         setIsModalOpen(false);
 
         const gameData = {
             ...game,
             status: 'COMPLETED',
             userNotes: userNotes,
+            completedOn: completionDate,
+            userRating: newRating,
         };
 
         await addGameToCollection(gameData);

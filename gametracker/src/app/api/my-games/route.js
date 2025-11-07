@@ -55,7 +55,8 @@ export async function POST(request) {
             metacritic: gameData.metacritic, 
             status: initialStatus,
             userNotes: gameData.userNotes || null,
-            completedOn: gameData.completedOn || null,
+            completedOn: gameData.completedOn ? new Date(gameData.completedOn) : null,
+            userRating: gameData.userRating || null,
     }});
         return NextResponse.json(newGame, { status: 201 });
 
@@ -92,7 +93,7 @@ export async function PUT(request) {
             dataToUpdate.userNotes = userNotes; 
         }
         if (completedOn !== undefined) {
-            dataToUpdate.completedOn = completedOn; 
+            dataToUpdate.completedOn = completedOn ? new Date(completedOn) : null;
         }
 
         
